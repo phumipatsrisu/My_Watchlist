@@ -77,6 +77,7 @@ const App = () => {
               <li className={item.watched ? "line-through text-gray-400" : ""}>
                 <label>
                   <input
+                    checked={item.watched}
                     type="checkbox"
                     onChange={() => toggleWatched(item.id)}
                   />
