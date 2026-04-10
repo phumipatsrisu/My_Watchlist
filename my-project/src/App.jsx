@@ -1,11 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const App = () => {
   const [movieName, setMovieName] = useState("");
   const [category, setCategory] = useState("action");
-  const [movies, setMovies] = useState([]);
+
+  const [movies, setMovies] = useState(() => {
+    const savedData = localStorage.getItem("myMovies");
+    console.log(savedData);
+
+    if (savedData) {
+      return JSON.parse(savedData);
+    }
+    return [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("myMovies", JSON.stringify(movies));
+  }, [movies]);
 
   const addMovie = () => {
+    if (!movieName) return;
     const newMovies = {
       id: Date.now(),
       name: movieName,
@@ -37,6 +51,7 @@ const App = () => {
           type="text"
           name=""
           id=""
+          placeholder="ชื่อหนัง..."
           className="border m-1"
           onChange={(e) => setMovieName(e.target.value)}
           value={movieName}
