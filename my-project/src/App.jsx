@@ -1,8 +1,27 @@
 import React, { useEffect, useState } from "react";
 
 const App = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
   const [movieName, setMovieName] = useState("");
   const [category, setCategory] = useState("action");
+
+  // fn
+  const searchMovie = async () => {
+    try {
+      setIsSearching(true);
+      const res = await fetch(
+        `https://api.tvmaze.com/search/shows?q=${searchQuery}`,
+      );
+      const data = await res.json();
+      setSearchResults(data);
+    } catch (error) {
+      console.log(error.message);
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
   const [movies, setMovies] = useState(() => {
     const savedData = localStorage.getItem("myMovies");
@@ -28,6 +47,16 @@ const App = () => {
     };
     setMovies([newMovies, ...movies]);
     setMovieName("");
+  };
+
+  const addFromSearch = (searchedName, searchedCategory) => {
+    const newMovie = {
+      id: Date.now(),
+      name: searchedName,
+      category: searchedCategory || "Other",
+      watched: false,
+    };
+    setMovies([newMovie, ...movies]);
   };
 
   const deleteMovies = (id) => {
@@ -82,7 +111,7 @@ const App = () => {
                     onChange={() => toggleWatched(item.id)}
                   />
                 </label>
-                {item.name} {item.category}
+                {item.name} - {item.category}
                 <button
                   onClick={() => deleteMovies(item.id)}
                   className="bg-red-400"
@@ -93,6 +122,36 @@ const App = () => {
             </div>
           ))}
         </ul>
+      </div>
+      <div>
+        <input
+          type="text"
+          placeholder="ค้นหาซีรีส์..."
+          className="border m-1"
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <button className="bg-red-400" onClick={searchMovie}>
+          ค้นหา
+        </button>
+        {isSearching ? (
+          <p>loding...</p>
+        ) : (
+          <ul>
+            {searchResults.map((item) => (
+              <li key={item.show.id}>
+                {item.show.name} - {item.show.genres[0]}
+                <button
+                  className="bg-green-300 ml-4 px-2 rounded"
+                  onClick={() =>
+                    addFromSearch(item.show.name, item.show.genres[0])
+                  }
+                >
+                  + เพิ่มลงลิสต์
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </>
   );
