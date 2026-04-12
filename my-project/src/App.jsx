@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import AddMovieForm from "./components/AddMovieForm";
 import MyList from "./components/MyList";
 import SeachSection from "./components/SeachSection";
+import { Route, Routes } from "react-router-dom";
+import MovieDetail from "./pages/MovieDetail";
 
 const App = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -78,29 +80,44 @@ const App = () => {
 
   return (
     <>
-      <AddMovieForm
-        movieName={movieName}
-        setMovieName={setMovieName}
-        category={category}
-        setCategory={setCategory}
-        addMovie={addMovie}
-      />
-      <div>
-        <MyList
-          deleteMovies={deleteMovies}
-          movies={movies}
-          toggleWatched={toggleWatched}
+      <h1>My Whatch List</h1>
+
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <div>
+              <div>
+                <AddMovieForm
+                  movieName={movieName}
+                  setMovieName={setMovieName}
+                  category={category}
+                  setCategory={setCategory}
+                  addMovie={addMovie}
+                />
+              </div>
+              <div>
+                <MyList
+                  deleteMovies={deleteMovies}
+                  movies={movies}
+                  toggleWatched={toggleWatched}
+                />
+              </div>
+              <div>
+                <SeachSection
+                  setSearchQuery={setSearchQuery}
+                  searchMovie={searchMovie}
+                  isSearching={isSearching}
+                  searchResults={searchResults}
+                  addFromSearch={addFromSearch}
+                />
+              </div>
+            </div>
+          }
         />
-      </div>
-      <div>
-        <SeachSection
-          setSearchQuery={setSearchQuery}
-          searchMovie={searchMovie}
-          isSearching={isSearching}
-          searchResults={searchResults}
-          addFromSearch={addFromSearch}
-        />
-      </div>
+
+        <Route path="/movie/:id" element={<MovieDetail />} />
+      </Routes>
     </>
   );
 };

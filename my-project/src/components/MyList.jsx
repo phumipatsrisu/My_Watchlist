@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const MyList = ({ movies, toggleWatched, deleteMovies }) => {
   return (
@@ -15,6 +16,9 @@ const MyList = ({ movies, toggleWatched, deleteMovies }) => {
                 />
               </label>
               {item.name} - {item.category}
+              <Link className="bg-yellow-200" to={`/movie/${item.id}`}>
+                Detail
+              </Link>
               <button
                 onClick={() => deleteMovies(item.id)}
                 className="bg-red-400"
