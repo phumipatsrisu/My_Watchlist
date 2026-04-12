@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import AddMovieForm from "./components/AddMovieForm";
+import MyList from "./components/MyList";
+import SeachSection from "./components/SeachSection";
 
 const App = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -75,83 +78,28 @@ const App = () => {
 
   return (
     <>
+      <AddMovieForm
+        movieName={movieName}
+        setMovieName={setMovieName}
+        category={category}
+        setCategory={setCategory}
+        addMovie={addMovie}
+      />
       <div>
-        <input
-          type="text"
-          name=""
-          id=""
-          placeholder="ชื่อหนัง..."
-          className="border m-1"
-          onChange={(e) => setMovieName(e.target.value)}
-          value={movieName}
+        <MyList
+          deleteMovies={deleteMovies}
+          movies={movies}
+          toggleWatched={toggleWatched}
         />
-        <select
-          name=""
-          id=""
-          className="border"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          <option value="action">action</option>
-          <option value="fantacy">fantacy</option>
-          <option value="drama">drama</option>
-        </select>
-        <button className="bg-blue-200" onClick={addMovie}>
-          Add Movie
-        </button>
-
-        <ul>
-          {movies.map((item) => (
-            <div className=" m-1" key={item.id}>
-              <li className={item.watched ? "line-through text-gray-400" : ""}>
-                <label>
-                  <input
-                    checked={item.watched}
-                    type="checkbox"
-                    onChange={() => toggleWatched(item.id)}
-                  />
-                </label>
-                {item.name} - {item.category}
-                <button
-                  onClick={() => deleteMovies(item.id)}
-                  className="bg-red-400"
-                >
-                  delete
-                </button>
-              </li>
-            </div>
-          ))}
-        </ul>
       </div>
       <div>
-        <input
-          type="text"
-          placeholder="ค้นหาซีรีส์..."
-          className="border m-1"
-          onChange={(e) => setSearchQuery(e.target.value)}
+        <SeachSection
+          setSearchQuery={setSearchQuery}
+          searchMovie={searchMovie}
+          isSearching={isSearching}
+          searchResults={searchResults}
+          addFromSearch={addFromSearch}
         />
-        <button className="bg-red-400" onClick={searchMovie}>
-          ค้นหา
-        </button>
-        {isSearching ? (
-          <p>loding...</p>
-        ) : (
-          <ul>
-            {searchResults.map((item) => (
-              <li key={item.show.id}>
-                {item.show.name} - {item.show.genres[0]}
-                <button
-                  className="bg-green-300 ml-4 px-2 rounded"
-                  onClick={() =>
-                    addFromSearch(item.show.name, item.show.genres[0])
-                  }
-                >
-                  + เพิ่มลงลิสต์
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
     </>
   );
